@@ -14,11 +14,11 @@ step of interest.
 
 * :ref:`Get a local copy of MyAutoML with the help of Cookiecutter`
 * :ref:`Create and populate a new virtual environment`
-* Configure the setup
-* data
-* pre-processing
-* estimator & hyperparameters
-* config.yml
+* :ref:`Configure the setup`
+    * data
+    * pre-processing
+    * estimator & hyperparameters
+    * config.yml
 * Run the train script
 * Evaluate
 * More estimators
@@ -54,13 +54,38 @@ Create and populate a new virtual environment
 
 A virtual environment allows you to install and use specific versions of Python and packages specifically for one project.
 This prevents cumbersome version conflicts when you run multiple projects from the same environment over time.
-More information on virtual environments can be found here.
+More information on virtual environments can be found on `real python`_.
 
-Make sure you are in the /scripts folder and enter the following commands from your terminal.
+.. _real python: https://realpython.com/python-virtual-environments-a-primer/
 
-conda env create -f environment.yml
-conda activate <name_of_your_environment>
+Move to the /scripts folder and enter the following commands from your terminal.
 
-This should change the prefix in your terminal from <base> to <name_of_your_environment>. If you are following along
-this tutorial with an IDE / editor make sure these are also aware of this new environment.
+.. code:: bash
 
+    conda env create -f environment.yml
+    conda activate <name_of_your_environment>
+
+This should change the prefix in your terminal from ``<base>`` to ``<name_of_your_environment>``. If you are following
+along this tutorial with an IDE / editor make sure these are also aware of this new environment.
+
+Configure the setup
+-------------------
+
+MyAutoML comes with templated Python scripts and a config file, all meant to write as little custom code as possible,
+and to keep focused on what makes your project stand out: the data.
+
+data
+^^^^
+
+For this tutorial we are going to use the `Bank Marketing Data Set <https://archive.ics.uci.edu/ml/datasets/Bank+Marketing>`_
+from the UCI Machine learning repository. The official reference is:
+
+    [Moro et al., 2014] S. Moro, P. Cortez and P. Rita. A Data-Driven Approach to Predict the Success of Bank Telemarketing.
+    Decision Support Systems, Elsevier, 62:22-31, June 2014
+
+This dataset holds a typical marketing classification task, where we are interested in predicting whether a customer
+will respond to a marketing campaign yes or no. The independent variables are a mix of demographics (age), customer
+specific data (balance), and behavioural data (response to previous campaigns).
+
+This dataset can be included in ``scripts/data.py``. We start with the ``load_training_data`` function, which is currently
+not implemented. To return an x_train and an y_train object we use the ``train_test_split`` function of scikit-learn.
