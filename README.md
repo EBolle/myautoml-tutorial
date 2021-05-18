@@ -12,27 +12,5 @@ MyAutoML is a project that aims to help data scientists become more efficient, b
 - A programming framework to automate as much as possible of the repetitive
   work a data scientist is likely to encounter.
 
-### Installation
-
-Install MyAutoML using `pip`:
-```shell script
-pip install myautoml
-```
-
-### Documentation
-
-Documentation is under development. The latest version can be found at
-https://myautoml.readthedocs.io/en/latest/.
-
-
-### Example scripts
-
-We provide example scripts in the folder `scripts`.
-
-
-### Cookiecutters
-
-To use the Cookiecutter templates:
-```shell script
-cookiecutter https://github.com/myautoml/myautoml.git --directory="cookiecutter/binary_classifier"
-```
+This project is created specifically to inspect newly written tutorials or other documentation on read the docs. Once
+validated this documentation is added to the main project.
