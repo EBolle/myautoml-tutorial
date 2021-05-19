@@ -228,7 +228,7 @@ first results.
 Run & evaluate
 ==============
 
-You are now ready to run the train script. Make sure you are in the `/scripts` folder and that the MyAutoML environment
+You are now ready to run the train script. Make sure you are in the ``/scripts`` folder and that the MyAutoML environment
 is activated.
 
 .. code:: bash
@@ -250,7 +250,7 @@ of experiments to track and compare results. More information can be found on `t
 
 .. _their website: https://www.mlflow.org/docs/latest/index.html
 
-To open the UI you first need to start it via another terminal. Please move to the `scripts` folder, activate the MyAutoML
+To open the UI you first need to start it via a new terminal. Please move to the ``scripts`` folder, activate the MyAutoML
 environment, and execute the following command.
 
 .. code:: bash
@@ -279,11 +279,11 @@ as well as the actual trained model.
 
 There is more information available than we can describe here, so we highly recommend to take your time exploring the
 experiment runs. Once finished, try to a different estimator and hyperparameter settings by adjusting the ``get_estimator``
-and ``get_params`` functions. When you run the train script again the results of these new evaluations will be added to
-the UI, so you can easily compare which estimator and hyperparameter settings work best.
+and ``get_params`` functions. When you run the train script again the results of these new evaluations will also become
+visible in the UI, so you can easily compare which estimator and hyperparameter settings work best.
 
 Wrapping up
 ===========
 
 Hopefully by now you have a better idea how MyAutoML works, and how it can help you to easily and efficiently train and
-compare binary classification models. In the next tutorial we will explain the next step in the modelling phase: prediction.
+compare binary classification models. In the following tutorial we will explain the next step in the modelling phase: prediction.
