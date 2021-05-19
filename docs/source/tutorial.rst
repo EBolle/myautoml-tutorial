@@ -88,4 +88,84 @@ will respond to a marketing campaign yes or no. The independent variables are a 
 specific data (balance), and behavioural data (response to previous campaigns).
 
 This dataset can be included in ``scripts/data.py``. We start with the ``load_training_data`` function, which is currently
-not implemented. To return an x_train and an y_train object we use the ``train_test_split`` function of scikit-learn.
+not implemented.
+
+.. code:: python
+
+    import pandas as pd
+    from pathlib import Path
+    from sklearn.model_selection import train_test_split
+
+
+    def load_training_data():
+        df_path = Path('..') / 'data' / 'bank' / 'bank-full.csv'
+        df = pd.read_csv(df_path, sep=';', usecols=['age', 'default', 'balance', 'housing',
+                                                    'loan', 'poutcome', 'y'])
+        x = df.drop(labels='y', axis=1)
+        y = df['y'].astype('category').cat.codes.astype('bool')
+
+        x_train, x_test, y_train, y_test = train_test_split(x, y,
+                                                            stratify=y,
+                                                            test_size=0.2,
+                                                            random_state=123)
+
+        return x_train, y_train
+
+Now that we have the training data, we need to shape it so it can be used for modeling.
+
+pre-processing
+^^^^^^^^^^^^^^
+
+Given that the goal of this tutorial is to show you how to train a model with MyAutoML, we take a shortcut in this
+section. We will only use 6 independent variables plus the dependent variable of the original dataset, but this will
+be enough to give you an idea of how to use MyAutoML.
+
+.. csv-table:: dataset preview
+   :file: ./tables/preview.csv
+   :header-rows: 1
+
+There are 3 pre-processing steps we need to take:
+
+- Select the columns of interest
+- Scale the numerical variables
+- Create numeric dummy variables for the categorical variables
+
+There are a number of ways to handle these steps, e.g., using custom Python functions. However, for this tutorial we are
+going to use a scikit-learn pipeline. There are a number of advantages of using this pipeline, such as being able to ``fit``
+the transformations on the training data, and applying these on the test data. This is actually an important step in the
+data science process but easily missed. The `official documentation`_ of MyAutoML illustrates this nicely.
+
+.. _official documentation: https://myautoml.readthedocs.io/en/latest/getting_started/ml_process.html
+
+.. figure:: ./images/training-process-aangepast.png
+   :align: center
+
+The preprocessor can be included in ``scripts/model.py``, where an example pipeline is already shown. We will overwrite
+the example with the following code.
+
+.. code:: python
+
+    def get_preprocessor():
+        numeric_transformer = Pipeline(steps=[
+            ('scaler', StandardScaler())])
+
+        categorical_transformer = Pipeline(steps=[
+            ('onehot', OneHotEncoder(handle_unknown='ignore'))])
+
+        preprocessor = ColumnTransformer(transformers=[
+            ('num', numeric_transformer, selector(pattern="age|balance")),
+            ('cat', categorical_transformer, selector(pattern="default|housing|loan|poutcome"))]
+        )
+
+        return preprocessor
+
+If any of this code is unfamiliar to you I can highly recommend watching these short `videos`_ or reading the
+`official pipeline documentation`_. Next, we need to choose an estimator.
+
+.. _videos: https://calmcode.io/scikit-learn/pipeline.html
+.. _official pipeline documentation: https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html
+
+estimator & hyperparameters
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
