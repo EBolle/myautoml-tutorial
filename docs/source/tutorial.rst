@@ -3,7 +3,7 @@ How to train a model with the MyAutoML cookiecutter?
 ====================================================
 
 :Author: Ernst Bolle
-:Last update: 2021-05-18
+:Last update: 2021-05-20
 
 Introduction
 ============
@@ -12,12 +12,11 @@ In this tutorial we will show you step-by-step how to train a binary classificat
 
 * :ref:`Installation`
 * :ref:`Configuration`
-    * data
-    * pre-processing
-    * estimator & hyperparameters
-    * config.yml
-* :ref:`Run the train script`
-* :ref:`Evaluate`
+    * :ref:`data`
+    * :ref:`pre-processing`
+    * :ref:`estimator & hyperparameters`
+    * :ref:`config.yml`
+* :ref:`Run & evaluate`
 * :ref:`Wrapping up`
 
 If you already have a local copy of MyAutoML including a working environment you may head over directly to :ref:`Configuration`.
@@ -78,11 +77,15 @@ from the UCI Machine learning repository. The official reference is:
 
 This dataset holds a typical marketing classification task, where we are interested in predicting whether a customer
 will respond to a marketing campaign yes or no. The independent variables are a mix of demographics (age), customer
-specific data (balance), and behavioural data (response to previous campaigns).
+specific data (balance), and behavioural data (response to previous campaigns). For demonstration purposes we
+will only use 6 independent variables plus the dependent variable of the original dataset.
+
+.. csv-table:: dataset preview
+   :file: ./tables/preview.csv
+   :header-rows: 1
 
 To transform this dataset to actual training data we need to modify  ``scripts/data.py``, specifically the
-``load_training_data`` function. Make sure to refer to the correct path of the dataset. For demonstration purposes we
-will only use 6 independent variables plus the dependent variable of the original dataset.
+``load_training_data`` function. Make sure to refer to the correct path of the dataset.
 
 .. code:: python
 
@@ -105,9 +108,6 @@ will only use 6 independent variables plus the dependent variable of the origina
 
         return x_train, y_train
 
-.. csv-table:: dataset preview
-   :file: ./tables/preview.csv
-   :header-rows: 1
 
 Now that we have the training data, we need to shape it so it can be used for modeling.
 
@@ -118,7 +118,7 @@ There are 3 pre-processing steps we need to take:
 
 - Scale the numerical variables
 - Create numeric dummy variables for the categorical variables
-- Select the right columns for the right pre-processing step
+- Select the correct columns for each pre-processing step
 
 It is possible to perform these pre-processing steps with custom Python functions, but we opt to choose for a scikit-learn
 pipeline. There are a number of advantages of using a pipeline, such as being able to ``fit`` the transformations on
@@ -225,6 +225,65 @@ first results.
     prediction:
       stage: Production
 
-Run the train script
-====================
+Run & evaluate
+==============
 
+You are now ready to run the train script. Make sure you are in the `/scripts` folder and that the MyAutoML environment
+is activated.
+
+.. code:: bash
+
+    python train.py
+
+If everything is setup correctly the script will start and you will see lots of logging statements in the terminal. Once
+the training is finished we are ready to evaluate, and this is the part where MyAutoML really shines. Besides training the
+model in an efficient manner with ``hyperopt``, a lot of other things were taken care of by the train script:
+
+- Logging of the metadata of the estimator
+- Logging of the metrics
+- Creation of 5 typical binary classifier evaluation graphics
+- Creation of the model as .pkl file, including a config file to easily distribute the model
+
+All these things are integrated in MLflow, so you can use easily use them via the UI. If you are not familiar with MLflow,
+it is an open source platform for managing the end-to-end machine learning lifecycle. Amongst other things, it keeps track
+of experiments to track and compare results. More information can be found on `their website`_.
+
+.. _their website: https://www.mlflow.org/docs/latest/index.html
+
+To open the UI you first need to start it via another terminal. Please move to the `scripts` folder, activate the MyAutoML
+environment, and execute the following command.
+
+.. code:: bash
+
+    mlfow ui
+
+Once you see the response in the terminal, head over to http://localhost:5000 and have a look. Note that we assume you
+are running this tutorial locally.
+
+.. figure:: ./images/mlflow_ui_example.jpg
+   :align: center
+
+By pressing the ``+`` button you gain access to every training evaluation (config.yml -> max_evals), which contains
+valuable information:
+
+- hyperparameter settings (complexity, balanced y/n)
+- evaluation metrics (accuracy in this case, specified for cv, train, and test)
+- tags (estimator class & model)
+
+Although informative, it gets even better when you click on one of the runs. Besides ~20 evaluation metrics there is a
+special section at the bottom which is called Artifacts. This section contains the graphical outputs of the specific run,
+as well as the actual trained model.
+
+.. figure:: ./images/mlflow_artifacts.jpg
+   :align: center
+
+There is more information available than we can describe here, so we highly recommend to take your time exploring the
+experiment runs. Once finished, try to a different estimator and hyperparameter settings by adjusting the ``get_estimator``
+and ``get_params`` functions. When you run the train script again the results of these new evaluations will be added to
+the UI, so you can easily compare which estimator and hyperparameter settings work best.
+
+Wrapping up
+===========
+
+Hopefully by now you have a better idea how MyAutoML works, and how it can help you to easily and efficiently train and
+compare binary classification models. In the next tutorial we will explain the next step in the modelling phase: prediction.
