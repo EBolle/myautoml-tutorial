@@ -12,7 +12,7 @@ In this tutorial we will show you step-by-step how to train a binary classificat
 There are quite a few steps we need to take, but if you are already familiar with MyAutoML you may head directly to the
 step of interest.
 
-* :ref:`Get a local copy of MyAutoML with the help of Cookiecutter`
+* :ref:`Get a local copy of MyAutoML`
 * :ref:`Create and populate a new virtual environment`
 * :ref:`Configure the setup`
     * data
@@ -24,8 +24,8 @@ step of interest.
 * More estimators
 * Wrapping up
 
-Get a local copy of MyAutoML with the help of Cookiecutter
-----------------------------------------------------------
+Get a local copy of MyAutoML
+----------------------------
 
 Before we start you might wonder: what is Cookiecutter? Cookiecutter is a CLI tool that allows you to easily create a
 project structure including important folders, scripts and documents. It is a way to save time if you find yourself
@@ -65,9 +65,6 @@ Move to the /scripts folder and enter the following commands from your terminal.
     conda env create -f environment.yml
     conda activate <name_of_your_environment>
 
-This should change the prefix in your terminal from ``<base>`` to ``<name_of_your_environment>``. If you are following
-along this tutorial with an IDE / editor make sure these are also aware of this new environment.
-
 Configure the setup
 -------------------
 
@@ -87,8 +84,8 @@ This dataset holds a typical marketing classification task, where we are interes
 will respond to a marketing campaign yes or no. The independent variables are a mix of demographics (age), customer
 specific data (balance), and behavioural data (response to previous campaigns).
 
-This dataset can be included in ``scripts/data.py``. We start with the ``load_training_data`` function, which is currently
-not implemented.
+To transform this dataset to a actual training data we need to adjust the ``scripts/data.py`` module, specifically the
+``load_training_data`` function. Make sure to correctly refer to the bank marketing dataset.
 
 .. code:: python
 
@@ -116,9 +113,7 @@ Now that we have the training data, we need to shape it so it can be used for mo
 pre-processing
 ^^^^^^^^^^^^^^
 
-Given that the goal of this tutorial is to show you how to train a model with MyAutoML, we take a shortcut in this
-section. We will only use 6 independent variables plus the dependent variable of the original dataset, but this will
-be enough to give you an idea of how to use MyAutoML.
+For demonstration purposes we will only use 6 independent variables plus the dependent variable of the original dataset.
 
 .. csv-table:: dataset preview
    :file: ./tables/preview.csv
@@ -130,18 +125,18 @@ There are 3 pre-processing steps we need to take:
 - Scale the numerical variables
 - Create numeric dummy variables for the categorical variables
 
-There are a number of ways to handle these steps, e.g., using custom Python functions. However, for this tutorial we are
-going to use a scikit-learn pipeline. There are a number of advantages of using this pipeline, such as being able to ``fit``
-the transformations on the training data, and applying these on the test data. This is actually an important step in the
-data science process but easily missed. The `official documentation`_ of MyAutoML illustrates this nicely.
+It is possible to perform these pre-processing steps with customer Python functions, but we opt to choose for a scikit-learn
+pipeline. There are a number of advantages of using a pipeline, such as being able to ``fit`` the transformations on
+the training data, and to apply these on the test data. This is an important step in building models but easily missed.
+The `official documentation`_ of MyAutoML illustrates this nicely.
 
 .. _official documentation: https://myautoml.readthedocs.io/en/latest/getting_started/ml_process.html
 
 .. figure:: ./images/training-process-aangepast.png
    :align: center
 
-The preprocessor can be included in ``scripts/model.py``, where an example pipeline is already shown. We will overwrite
-the example with the following code.
+The pre-processor can be set in ``scripts/model.py``, where an example pipeline is already shown in the `get_preprocessor`
+function. We will overwrite the example with the following code.
 
 .. code:: python
 
@@ -159,7 +154,7 @@ the example with the following code.
 
         return preprocessor
 
-If any of this code is unfamiliar to you I can highly recommend watching these short `videos`_ or reading the
+If any of this code is unfamiliar to you we can highly recommend watching these short `videos`_ on calmcode or read the
 `official pipeline documentation`_. Next, we need to choose an estimator.
 
 .. _videos: https://calmcode.io/scikit-learn/pipeline.html
@@ -168,4 +163,46 @@ If any of this code is unfamiliar to you I can highly recommend watching these s
 estimator & hyperparameters
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+To be able to build a full model pipeline, MyAutoML also uses scikit-learn for its estimators. For this tutorial we will
+use logistic regression, but you can use any estimator from scikit-learn that is suited for binary classification.
+
+To setup the estimator in ``scripts/model.py`` we need to retrieve a few things, which are all available in the
+`official LogisticRegression documentation`_.
+
+.. _official LogisticRegression documentation: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html
+
+- module name: sklearn.linear_model
+- class name: LogisticRegression
+- hyperparameters: C, class_weight
+
+This information can directly be used to set the ``get_estimator`` and ``get_params`` functions.
+
+.. code:: python
+
+    from sklearn.linear_model import LogisticRegression
+
+
+    def get_estimator(**params):
+        estimator = LogisticRegression(**params)
+        estimator_tags = {'module': 'sklearn.linear_model',
+                          'class': 'LogisticRegression'}
+
+        return estimator, estimator_tags
+
+
+    def get_params():
+        estimator_params = {}
+        search_space = {
+            'C': hp.quniform('C', 0, 1, 0.0001),
+            'class_weight': hp.choice('class_weight', [None, 'balanced'])
+        }
+
+        return estimator_params, search_space
+
+Note that it is important that the keys from the ``search_space`` dictionary exactly match the names of the hyperparameters.
+The ``hp.`` methods help to create a hyperparameter space which can be efficiently searched with ``hyperopt`` when
+training the model.
+
+config.yml
+^^^^^^^^^^
 
