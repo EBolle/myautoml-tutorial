@@ -262,7 +262,7 @@ environment, and execute the following command.
 Once you see the response in the terminal, head over to http://localhost:5000 and have a look. Note that we assume you
 are running this tutorial locally.
 
-.. figure:: ../images/mlflow_ui_example.jpg
+.. figure:: ../images/mlflow_ui_example.JPG
    :align: center
 
 By pressing the ``+`` button you gain access to every training evaluation (config.yml -> max_evals), which contains
@@ -276,7 +276,7 @@ Although informative, it gets even better when you click on one of the runs. Bes
 special section at the bottom which is called Artifacts. This section contains the graphical outputs of the specific run,
 as well as the actual trained model.
 
-.. figure:: ../images/mlflow_artifacts.jpg
+.. figure:: ../images/mlflow_artifacts.JPG
    :align: center
 
 There is more information available than we can describe here, so we highly recommend to take your time exploring the
