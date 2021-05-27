@@ -14,3 +14,5 @@ MyAutoML is a project that aims to help data scientists become more efficient, b
 
 This project is created specifically to inspect newly written tutorials or other documentation on read the docs. Once
 validated this documentation is added to the main project.
+
+[Go to the tutorial](https://myautoml-tutorial.readthedocs.io/en/latest/getting_started/tutorial.html)
