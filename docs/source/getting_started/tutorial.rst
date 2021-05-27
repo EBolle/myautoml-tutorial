@@ -1,11 +1,11 @@
 .. _tutorial:
 
 ====================================================
-How to train a model with the MyAutoML cookiecutter?
+Tutorial: train a model
 ====================================================
 
 :Author: Ernst Bolle
-:Last update: 2021-05-20
+:Last update: 2021-05-27
 
 Introduction
 ============
