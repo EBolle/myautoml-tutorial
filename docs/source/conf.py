@@ -47,9 +47,22 @@ exclude_patterns = []
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+html_theme = 'pydata_sphinx_theme'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+# -- PyData sphinx theme configuration ---------------------------------------
+html_theme_options = {
+  "github_url": "https://github.com/myautoml/myautoml"
+}
+
+html_css_files = [
+    "css/getting_started.css",
+    "css/base.css",
+]
+
+html_logo = "_static/logo.png"
+html_favicon = "_static/favicon.ico"

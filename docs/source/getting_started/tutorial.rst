@@ -1,3 +1,5 @@
+.. _tutorial:
+
 ====================================================
 How to train a model with the MyAutoML cookiecutter?
 ====================================================
@@ -81,7 +83,7 @@ specific data (balance), and behavioural data (response to previous campaigns). 
 will only use 6 independent variables plus the dependent variable of the original dataset.
 
 .. csv-table:: dataset preview
-   :file: ./tables/preview.csv
+   :file: ../tables/preview.csv
    :header-rows: 1
 
 To transform this dataset to actual training data we need to modify  ``scripts/data.py``, specifically the
@@ -127,7 +129,7 @@ The `official documentation`_ of MyAutoML illustrates this nicely.
 
 .. _official documentation: https://myautoml.readthedocs.io/en/latest/getting_started/ml_process.html
 
-.. figure:: ./images/training-process-aangepast.png
+.. figure:: ../images/training-process-aangepast.png
    :align: center
 
 The pre-processor can be set in ``scripts/model.py``, where an example pipeline is already shown in the ``get_preprocessor``
@@ -260,7 +262,7 @@ environment, and execute the following command.
 Once you see the response in the terminal, head over to http://localhost:5000 and have a look. Note that we assume you
 are running this tutorial locally.
 
-.. figure:: ./images/mlflow_ui_example.jpg
+.. figure:: ../images/mlflow_ui_example.jpg
    :align: center
 
 By pressing the ``+`` button you gain access to every training evaluation (config.yml -> max_evals), which contains
@@ -274,7 +276,7 @@ Although informative, it gets even better when you click on one of the runs. Bes
 special section at the bottom which is called Artifacts. This section contains the graphical outputs of the specific run,
 as well as the actual trained model.
 
-.. figure:: ./images/mlflow_artifacts.jpg
+.. figure:: ../images/mlflow_artifacts.jpg
    :align: center
 
 There is more information available than we can describe here, so we highly recommend to take your time exploring the
